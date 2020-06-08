@@ -1,87 +1,91 @@
 // Generated with util/create-component.js
-import React from "react";
+import React, { useCallback } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import qs from "query-string";
-
+import throttle from "lodash/throttle";
+import debounce from "lodash/debounce";
+import capitalize from "lodash/capitalize";
 export type SearchInputProps = Pick<
   React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
-  "value" | "onChange" | "onKeyDown"
+  "value" | "onChange" | "onKeyDown" | "placeholder"
 >;
 
+export type SearchButtonProps = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
 
 interface UseSearchOptions {
   throttle?: number;
-  debounce?: number
+  debounce?: number;
 }
 
-function useSearch(param = "search", options: UseSearchOptions={debounce:100, throttle: 1000,
-  }) {
-
-
+function useSearch(
+  param = "search",
+  options: UseSearchOptions = { debounce: 1300, throttle: 500 }
+) {
   const { pathname } = useLocation();
   const history = useHistory();
-  
 
-  const [value, setValue] = React.useState(new URLSearchParams(window.location.search).get(param) ?? "");
+  const [state, setState] = React.useState(
+    new URLSearchParams(window.location.search).get(param) ?? ""
+  );
 
   const handleReset = () => {
-    setValue("");
+    setState("");
     history.replace(pathname);
   };
 
-  const handleSearch = (value: string) => {
-    if (!value) history.push(pathname);
+  const handleSearch = useCallback(
+    debounce((value: string) => {
+      if (value === "") history.push(pathname);
 
-    history.replace(`${pathname}?${qs.stringify({ [param]: value })}`);
-  };
+      history.replace(
+        qs.stringifyUrl({
+          url: pathname,
+          query: { [param]: value },
+        })
+      );
+    }, options.debounce),
+    []
+  );
 
-  //   const throttled = throttle(500, (value) => handleSearch(value));
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.currentTarget.value === "") {
+      handleReset();
+    } else {
+      setState(event.currentTarget.value);
+      handleSearch(event.currentTarget.value);
+    }
+  }
 
-  //   const debounced = debounce(500, (value) => handleSearch(value));
-
-  const handleChange:React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const value = event.currentTarget.value;
-    
-    setValue(value);
-    console.log(window.location.search)
-const currentUrl = qs.stringifyUrl({url: window.location.pathname,query: {[param]: value}})
-    window.history.pushState({},"Results for `Cats`",currentUrl);
-    
-  };
-
-  const handleKeyDown:React.KeyboardEventHandler<HTMLInputElement> = (event ) => {
-    console.log(event.key)
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
+    event
+  ) => {
     if (event.key === "Enter") handleSearch(event.currentTarget.value);
     if (event.key === "Escape") handleReset();
   };
 
-  const showCloseButton = () => {
-    switch (value) {
-      case null:
-        return false;
-      case "":
-        return false;
-
-      default:
-        return true;
-    }
+  const inputProps: SearchInputProps = {
+    value: state,
+    onChange: handleChange,
+    onKeyDown: handleKeyDown,
+    placeholder: capitalize(param),
   };
 
-
-  const inputProps: SearchInputProps = {value,onChange:handleChange,onKeyDown:handleKeyDown }
+  const buttonProps: SearchButtonProps = {
+    onClick: handleReset,
+    disabled: state === "",
+  };
 
   return {
     inputProps,
+    buttonProps,
     handleReset,
-    value,
-    setValue,
-    handleSearch,
-    handleChange,
-    handleKeyDown,
-    showCloseButton
+    value: state,
   };
 }
 
