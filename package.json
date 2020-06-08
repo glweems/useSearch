@@ -1,13 +1,8 @@
 {
-  "name": "react-ts",
-  "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
-  "keywords": [
-    "typescript",
-    "react",
-    "starter"
-  ],
-  "main": "src/index.tsx",
+  "name": "usesearch",
+  "version": "0.0.1",
+  "description": "React hook for url searches",
+  "main": "index.js",
   "dependencies": {
     "lodash": "^4.17.15",
     "query-string": "6.12.1",
@@ -37,4 +32,19 @@
     "not ie <= 11",
     "not op_mini all"
   ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glweems/useSearch.git"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "search"
+  ],
+  "author": "Garrett Weems <gwgraphicdesign@gmail.com> (https://glweems.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/glweems/useSearch/issues"
+  },
+  "homepage": "https://github.com/glweems/useSearch#readme"
 }
