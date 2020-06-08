@@ -1,2 +1,0 @@
-# useSearch
-Created with CodeSandbox
