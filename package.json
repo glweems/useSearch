@@ -1,6 +1,6 @@
 {
   "name": "@glweems/usesearch",
-  "version": "0.0.2",
+  "version": "0.0.3-0",
   "description": "React hook for url searches",
   "main": "build/index.js",
   "module": "build/index.es.js",
