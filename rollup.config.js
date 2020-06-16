@@ -21,12 +21,12 @@ export default {
   input: "src/useSearch.ts",
   output: [
     {
-      dir: "build",
+      dir: "dist",
       format: "cjs",
       sourcemap: true,
     },
     {
-      dir: "build",
+      dir: "dist",
       format: "esm",
       sourcemap: true,
     },

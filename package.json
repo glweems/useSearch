@@ -1,14 +1,16 @@
 {
-  "name": "@glweems/usesearch",
-  "version": "0.0.7",
+  "name": "usesearch",
+  "version": "0.0.5",
   "description": "React hook for url searches",
-  "main": "build/index.js",
-  "module": "build/index.es.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
   "files": [
-    "build"
+    "dist"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/@glweems"
+  },
   "scripts": {
-    "postinstall": "npm run build",
     "start": "react-scripts start",
     "build": "rollup -c",
     "test": "react-scripts test --env=jsdom",
